@@ -46,9 +46,21 @@ jQuery(document).ready(function($) {
 		// Get the link set in the href attribute for the currently clicked element.
 		var form_field = $(this).attr('href');
 
-		$('.wpml-content').hide();
-		$('.section-container ' + form_field).fadeIn('fast');
-
+		// fade-out, then fade-in (need to re-center the box)
+		var login_id = $('#login-box');
+		$(login_id).fadeOut('fast', function() {
+			// Animation complete
+			$('.wpml-content').hide();
+			$('.section-container ' + form_field).show();
+			var margin_left = ($(login_id).width() + 24) / 2;
+			var margin_top = ($(login_id).height() + 24) / 2;
+			$(login_id).fadeIn(300);
+			$(login_id).css({
+				'margin-left' : -margin_left,
+				'margin-top' : -margin_top
+			});
+		});
+		
 		e.preventDefault();
 
 		if(form_field === '#login') {
