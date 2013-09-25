@@ -79,8 +79,8 @@
 }
 
 /*** Login Form ***/
-#form {
-	padding:$spacing;
+.login-popup {
+	form {padding:$spacing;}
 	p {
 		padding:0;
 		margin:0 0 10px;

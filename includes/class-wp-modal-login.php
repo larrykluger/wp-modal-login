@@ -137,9 +137,10 @@
 			// Check if we are submitting the register form
 			elseif ( isset( $_REQUEST['register'] ) ) {
 				$user_data = array(
-					'user_login' => sanitize_user( $_REQUEST['username'] ),
-					'user_email' => sanitize_email( $_REQUEST['email'] ),
+					'user_login' => sanitize_user( $_REQUEST['user_login'] ),
+					'user_email' => sanitize_email( $_REQUEST['user_email'] ),
 				);
+								
 				$user_register = $this->register_new_user( $user_data['user_login'], $user_data['user_email'] );
 
 				// Check if there were any issues with creating the new user
@@ -364,7 +365,7 @@
 
 							<?php do_action( 'before_wpml_login' ); ?>
 
-							<form action="login" method="post" id="form" class="group" name="loginform">
+							<form action="login" method="post" class="group" name="loginform">
 
 								<?php do_action( 'inside_wpml_login_first' ); ?>
 
@@ -408,7 +409,7 @@
 
 									<?php do_action( 'before_wpml_register' ); ?>
 
-									<form action="register" method="post" id="form" class="group" name="loginform">
+									<form action="register" method="post" class="group" name="loginform">
 
 										<?php do_action( 'inside_wpml_register_first' ); ?>
 
@@ -449,7 +450,7 @@
 
 							<?php do_action( 'before_wpml_forgotten' ); ?>
 
-							<form action="forgotten" method="post" id="form" class="group" name="loginform">
+							<form action="forgotten" method="post" class="group" name="loginform">
 
 								<?php do_action( 'inside_wpml_forgotton_first' ); ?>
 

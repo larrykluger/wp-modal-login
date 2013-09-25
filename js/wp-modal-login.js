@@ -72,7 +72,7 @@ jQuery(document).ready(function($) {
 
 
 	// Run our login ajax
-	$('#login-box #form').on('submit', function(e) {
+	var form_submit = function(e) {
 
 		// Stop the form from submitting so we can use ajax.
 		e.preventDefault();
@@ -85,6 +85,7 @@ jQuery(document).ready(function($) {
 
 		// Display our loading message while we check the credentials.
 		$('.wpml-content > h2').after('<p class="message notice">' + wpml_script.loadingmessage + '</p>');
+		$('.wpml-content > p.message').show();
 
 		// Check if we are trying to login. If so, process all the needed form fields and return a faild or success message.
 		if ( form_id === 'login' ) {
@@ -94,11 +95,11 @@ jQuery(document).ready(function($) {
 				url: wpml_script.ajax,
 				data: {
 					'action'     : 'ajaxlogin', // Calls our wp_ajax_nopriv_ajaxlogin
-					'username'   : $('#form #login_user').val(),
-					'password'   : $('#form #login_pass').val(),
-					'rememberme' : $('#form #rememberme').val(),
-					'login'      : $('#form input[name="login"]').val(),
-					'security'   : $('#form #security').val()
+					'username'   : $('#login #login_user').val(),
+					'password'   : $('#login #login_pass').val(),
+					'rememberme' : $('#login #rememberme').val(),
+					'login'      : $('#login input[name="login"]').val(),
+					'security'   : $('#login #security').val()
 				},
 				success: function(results) {
 
@@ -115,21 +116,24 @@ jQuery(document).ready(function($) {
 				}
 			});
 		} else if ( form_id === 'register' ) {
+		    var reg_data = {}, form_fiels;
+			form_fields = $('#register form').serialize().split('&');
+			reg_data.action = 'ajaxlogin'; // Calls our wp_ajax_nopriv_ajaxlogin
+			var length = form_fields.length, field_parts;
+			for (var i = 0; i < length; i++) {
+				field_parts = form_fields[i].split('=');
+				reg_data[field_parts[0]] = decodeURIComponent(field_parts[1]);
+			}
+			
 			$.ajax({
-				type: 'GET',
+				type: 'POST',
 				dataType: 'json',
 				url: wpml_script.ajax,
-				data: {
-					'action'   : 'ajaxlogin', // Calls our wp_ajax_nopriv_ajaxlogin
-					'username' : $('#form #reg_user').val(),
-					'email'    : $('#form #reg_email').val(),
-					'register' : $('#form input[name="register"]').val(),
-					'security' : $('#form #security').val()
-				},
+				data: reg_data,
 				success: function(results) {
 					if(results.registerd === true) {
 						$('.wpml-content > p.message').removeClass('notice').addClass('success').text(results.message).show();
-						$('#register #form input:not(#user-submit)').val('');
+						$('#register input:not(#user-submit)').val('');
 					} else {
 						$('.wpml-content > p.message').removeClass('notice').addClass('error').text(results.message).show();
 					}
@@ -142,14 +146,14 @@ jQuery(document).ready(function($) {
 				url: wpml_script.ajax,
 				data: {
 					'action'    : 'ajaxlogin', // Calls our wp_ajax_nopriv_ajaxlogin
-					'username'  : $('#form #forgot_login').val(),
-					'forgotten' : $('#form input[name="forgotten"]').val(),
-					'security'  : $('#form #security').val()
+					'username'  : $('#forgotten #forgot_login').val(),
+					'forgotten' : $('#forgotten input[name="forgotten"]').val(),
+					'security'  : $('#forgotten #security').val()
 				},
 				success: function(results) {
 					if(results.reset === true) {
 						$('.wpml-content > p.message').removeClass('notice').addClass('success').text(results.message).show();
-						$('#forgotten #form input:not(#user-submit)').val('');
+						$('#forgotten input:not(#user-submit)').val('');
 					} else {
 						$('.wpml-content > p.message').removeClass('notice').addClass('error').text(results.message).show();
 					}
@@ -157,7 +161,8 @@ jQuery(document).ready(function($) {
 			});
 		} else {
 			// if all else fails and we've hit here... something strange happen and notify the user.
-			$('.wpml-content > p.message').text('Something  Please refresh your window and try again.');
+			$('.wpml-content > p.message').text('Something went wrong. Please refresh your window and try again.');
 		}
-	});
+	};
+	$('#login-box form').on('submit', form_submit);
 });
