@@ -116,13 +116,13 @@ jQuery(document).ready(function($) {
 				}
 			});
 		} else if ( form_id === 'register' ) {
-		    var reg_data = {}, form_fiels;
-			form_fields = $('#register form').serialize().split('&');
+		    var reg_data = {}, form_fields;
 			reg_data.action = 'ajaxlogin'; // Calls our wp_ajax_nopriv_ajaxlogin
+			form_fields = $('#register form').serializeArray();
 			var length = form_fields.length, field_parts;
 			for (var i = 0; i < length; i++) {
-				field_parts = form_fields[i].split('=');
-				reg_data[field_parts[0]] = decodeURIComponent(field_parts[1]);
+				field_parts = form_fields[i];
+				reg_data[field_parts.name] = field_parts.value;
 			}
 			
 			$.ajax({
