@@ -109,12 +109,14 @@
 
 			// Check our nonce and make sure it's correct.
 			check_ajax_referer( 'ajax-form-nonce', 'security' );
+			global $wp_modal_form; // the form that is being processed. Used by other plugins.
 
 			// Get our form data.
 			$data = array();
 
 			// Check that we are submitting the login form
 			if ( isset( $_REQUEST['login'] ) )  {
+				$wp_modal_form = 'login'; // the form that is being processed. Used by other plugins.
 				$data['user_login'] 	  = sanitize_user( $_REQUEST['username'] );
 				$data['user_password'] = sanitize_text_field( $_REQUEST['password'] );
 				$data['rememberme'] 	  = sanitize_text_field( $_REQUEST['rememberme'] );
@@ -136,6 +138,7 @@
 
 			// Check if we are submitting the register form
 			elseif ( isset( $_REQUEST['register'] ) ) {
+				$wp_modal_form = 'registration'; // the form that is being processed. Used by other plugins.
 				$user_data = array(
 					'user_login' => sanitize_user( $_REQUEST['user_login'] ),
 					'user_email' => sanitize_email( $_REQUEST['user_email'] ),
@@ -159,6 +162,7 @@
 
 			// Check if we are submitting the forgotten pwd form
 			elseif ( isset( $_REQUEST['forgotten'] ) ) {
+				$wp_modal_form = 'forgotten'; // the form that is being processed. Used by other plugins.
 
 				// Check if we are sending an email or username and sanitize it appropriately
 				if ( is_email( $_REQUEST['username'] ) ) {
