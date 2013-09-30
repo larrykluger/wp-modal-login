@@ -132,10 +132,10 @@ jQuery(document).ready(function($) {
 				data: reg_data,
 				success: function(results) {
 					if(results.registerd === true) {
-						$('.wpml-content > p.message').removeClass('notice').addClass('success').text(results.message).show();
+						$('.wpml-content > p.message').removeClass('notice').addClass('success').html(results.message).show();
 						$('#register input:not(#user-submit)').val('');
 					} else {
-						$('.wpml-content > p.message').removeClass('notice').addClass('error').text(results.message).show();
+						$('.wpml-content > p.message').removeClass('notice').addClass('error').html(results.message).show();
 					}
 				}
 			});

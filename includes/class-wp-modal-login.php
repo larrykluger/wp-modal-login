@@ -101,7 +101,7 @@
 		/**
 		 * The main function behind a large section of the Ajax-y goodness.
 		 * @return void
-		 *
+		 * @filter wpml_reg_msg -- successful registration msg for the user
 		 * @version 1.1.2
 		 * @since 2.0
 		 */
@@ -155,7 +155,8 @@
 				} else {
 					echo json_encode( array(
 						'registerd' => true,
-						'message'	=> __( 'Registration complete. Please check your e-mail.', 'geissinger-wpml' ),
+						'message'	=> apply_filters( 'wpml_reg_msg',
+							__( 'Registration complete. Please check your e-mail.', 'geissinger-wpml' )),
 					) );
 				}
 			}
