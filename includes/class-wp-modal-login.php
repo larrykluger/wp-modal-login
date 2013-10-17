@@ -443,6 +443,12 @@
 										<?php do_action( 'inside_wpml_register_last' ); ?>
 
 									</form>
+									<form action="continue" method="post" class="group" name="continueform" style="display:none;">
+										<p class="submit">
+											<input type="submit" id="wp-continue" class="button button-primary button-large" value="<?php esc_attr_e( 'Continue', 'geissinger-wpml' ); ?>" />
+										</p><!--[END .submit]-->
+									</form><!--[END #continueform]-->
+
 
 								</div><!--[END #register]-->
 							<?php endif;

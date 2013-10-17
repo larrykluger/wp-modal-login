@@ -1,40 +1,46 @@
 jQuery(document).ready(function($) {
 
 	// Load the modal window
-	$('a.login-window').click(function() {
-
-		// Get the value in the href of our button.
-		var login_id = $(this).attr('href');
-
+	$('a.login-window').click(function(e){open_modal( $(this).attr('href'), '#login' )});
+	
+	var open_modal = function(modal_id, form_field) {
+		// form_field is #register, #login, or #forgotten
 		// Add our overlay to the body and fade it in.
 		$('body').append('<div id="overlay"></div>');
 		$('#overlay').fadeIn(300);
 
+		// ready the form
+		$('.wpml-content').hide();
+		$(form_field).show();
+		
 		// Fade in the modal window.
-		$(login_id).fadeIn(300);
+		$(modal_id).fadeIn(300);
 
 		// center our modal window with the browsers.
-		var margin_left = ($(login_id).width() + 24) / 2;
-		var margin_top = ($(login_id).height() + 24) / 2;
+		var margin_left = ($(modal_id).width() + 24) / 2;
+		var margin_top = ($(modal_id).height() + 24) / 2;
 
-		$(login_id).css({
+		$(modal_id).css({
 			'margin-left' : -margin_left,
 			'margin-top' : -margin_top
 		});
 
 		return false;
-	});
-
+	}
 
 	// Close the modal window and overlay when we click the close button or on the overlay
-	$('.close-btn').click(function() {
+	var close_modal = function () {
 		$('#overlay, .login-popup').fadeOut('300m', function() {
 			$('#overlay').remove();
 		});
-
+		// reset the register forms
+		$('#register form[name="loginform"]').show();
+		$('#register form[name="continueform"]').hide();
+		// close message area
+		$('.wpml-content > p.message').remove();		
 		return false;
-	});
-
+	}
+	$('.close-btn').click(close_modal);
 
 	// Display our different form fields when buttons are clicked
 	$('.wpml-content:not(:first)').hide();
@@ -79,6 +85,12 @@ jQuery(document).ready(function($) {
 
 		// Check what form is currently being submitted so we can return the right values for the ajax request.
 		var form_id = $(this).parent().attr('id');
+		
+		// Handle the "Continue" button after someone has registered
+		if ( form_id === 'register' && $(this).attr('name') === "continueform" ) {
+			close_modal();
+			return;
+		}
 
 		// Remove any messages that currently exist.
 		$('.wpml-content > p.message').remove();
@@ -133,7 +145,11 @@ jQuery(document).ready(function($) {
 				success: function(results) {
 					if(results.registerd === true) {
 						$('.wpml-content > p.message').removeClass('notice').addClass('success').html(results.message).show();
-						$('#register input:not(#user-submit)').val('');
+						$('#register form[name="loginform"] input:not(#user-submit,input[type="hidden"],input[type="checkbox"])').val(''); // clear input fields
+						$('#register form[name="loginform"] input[type="checkbox"]').attr('checked', false); // special for checkboxes						
+						$('#register form[name="loginform"]').slideToggle('fast', 'swing', function() {
+							$('#register form[name="continueform"]').slideToggle('fast');
+							})
 					} else {
 						$('.wpml-content > p.message').removeClass('notice').addClass('error').html(results.message).show();
 					}
@@ -164,5 +180,7 @@ jQuery(document).ready(function($) {
 			$('.wpml-content > p.message').text('Something went wrong. Please refresh your window and try again.');
 		}
 	};
+	
 	$('#login-box form').on('submit', form_submit);
+
 });
