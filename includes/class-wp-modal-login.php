@@ -577,9 +577,14 @@
 				'login_text'  => 'Login',
 				'logout_text' => 'Logout',
 				'logout_url'  => home_url(),
+				'register_text' => false,
 			), $atts ) );
 
-			if ( is_user_logged_in() ) {
+			if ( is_user_logged_in() && $register_text ) {
+				$link = '';
+			} else if ( !is_user_logged_in() && $register_text ) {
+				$link = '<a href="#login-box" class="login wpml-btn register-window">' . sprintf( _x( '%s', 'Register', 'geissinger-wpml' ), sanitize_text_field( $register_text ) ) . '</a></li>';
+			} else if ( is_user_logged_in() ) {
 				$link = '<a href="' . wp_logout_url( esc_url( $logout_url ) ) . '" class="logout wpml-btn">' . sprintf( _x( '%s', 'Shortcode Logout Text', 'geissinger-wpml' ), sanitize_text_field( $logout_text ) ) . '</a>';
 			} else {
 				$link = '<a href="#login-box" class="login wpml-btn login-window">' . sprintf( _x( '%s', 'Shortcode Login Text', 'geissinger-wpml' ), sanitize_text_field( $login_text ) ) . '</a></li>';

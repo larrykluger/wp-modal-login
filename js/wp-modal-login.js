@@ -2,6 +2,8 @@ jQuery(document).ready(function($) {
 
 	// Load the modal window
 	$('a.login-window').click(function(e){open_modal( $(this).attr('href'), '#login' )});
+	$('a.register-window').click(function(e){open_modal( $(this).attr('href'), '#register' )});
+	$('a.forgot-window').click(function(e){open_modal( $(this).attr('href'), '#forgotten' )});
 	
 	var open_modal = function(modal_id, form_field) {
 		// form_field is #register, #login, or #forgotten
@@ -30,14 +32,14 @@ jQuery(document).ready(function($) {
 
 	// Close the modal window and overlay when we click the close button or on the overlay
 	var close_modal = function () {
-		$('#overlay, .login-popup').fadeOut('300m', function() {
+		$('#overlay, .login-popup').fadeOut('fast', 'swing', function() {
 			$('#overlay').remove();
+			// reset the register forms
+			$('#register form[name="loginform"]').show();
+			$('#register form[name="continueform"]').hide();
+			// close message area
+			$('.wpml-content > p.message').remove();		
 		});
-		// reset the register forms
-		$('#register form[name="loginform"]').show();
-		$('#register form[name="continueform"]').hide();
-		// close message area
-		$('.wpml-content > p.message').remove();		
 		return false;
 	}
 	$('.close-btn').click(close_modal);
